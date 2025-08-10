@@ -6,7 +6,9 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = \
-        'mysql+mysqlconnector://crmdb:habrhabr@localhost/crmdb'
+        'sqlite:///knowledge.db'
+        # 'mysql+mysqlconnector://crmdb:habrhabr@localhost/crmdb'
+    NUM_PER_PAGE = 10  # Кол-во записей на странице при пагинации
 
 
 class ProductionConfig(Config):

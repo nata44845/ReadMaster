@@ -2,25 +2,16 @@ from flask import Flask, render_template, g, session, request, redirect, \
     url_for, flash
 import os.path
 from flask_bootstrap import Bootstrap
-from forms import FormClientCardAdd, FormClientCardEdit, FormEventAdd, \
-    FormEventUpdate, FormCallReminde, FormAddRuk, FormAddManager, FormContact
+from forms import FormAddAdmin, FormAddUser
 from logging.handlers import RotatingFileHandler
 from logging import Formatter
 import logging
 import time
-import csv
 from sqlalchemy.sql.expression import func
 from sqlalchemy.sql import text
-# from sqlalchemy import exc
-# from htmlmin.minify import html_minify  # Сжатие html
 from datetime import timedelta
-from flask_seasurf import SeaSurf
-from flask_caching import Cache  # Автоматом добавляет к ключу префикс _flask
-from models import db, Client, CallRemind, Contact, CallHistory, Event, User, \
-    AuthLog
+from models import db, User, AuthLog
 from datetime import datetime
-import aster
-import json
 
 app = Flask(__name__)
 
@@ -35,10 +26,7 @@ app.jinja_env.add_extension('jinja2.ext.loopcontrols')  # range, continue в т�
 db.init_app(app)
 bootstrap = Bootstrap(app)
 app.permanent_session_lifetime = timedelta(days=3650)
-csrf = SeaSurf(app)
-NUM_PER_PAGE = 10  # Кол-во записей на странице при пагинации
-cache = Cache(app, config={'CACHE_TYPE': 'memcached',
-                           "CACHE_MEMCACHED_SERVERS": ['127.0.0.1:11211']})
+
 # -----------------------------------------------------------------------------
 # Включение, отключение и ротация логов.
 # -----------------------------------------------------------------------------
@@ -100,8 +88,6 @@ def teardown_request(exception=None):
 #  Роуты общие для всех
 # -----------------------------------------------------------------------------
 
-
-@csrf.include
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():  # Авторизация
